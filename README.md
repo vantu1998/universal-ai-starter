@@ -130,6 +130,14 @@ Need to switch tools because you hit an API quota or prefer Cursor for editing a
 
 ---
 
+## 🧹 Using "Use this template" on GitHub
+
+The installer only copies template files. If you instead create a repo with GitHub's **Use this template** button, you also get this project's maintainer files. Delete or edit them:
+
+- `.github/CODEOWNERS` (points to the upstream maintainer), `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md`
+- `.github/workflows/ci.yml` (only runs on the upstream repo; replace with your own CI)
+- Fill in the placeholders in `AGENTS.md`, `STATE.md` and `ROADMAP.md`.
+
 ## ⚡ Native Tool Sync Engine
 
 Why keep commands and skills in `.ai/`?  

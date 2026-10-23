@@ -17,6 +17,7 @@ concurrency:
 jobs:
   lint:
     name: Lint scripts and AI config
+    if: github.repository == 'vantu1998/universal-ai-starter'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,6 +34,15 @@ jobs:
             [ "$(t "$c")" = 2 ] || { echo "not blocked: $c"; exit 1; }
           done
 
+      - name: Template cleanliness (no maintainer dev traces in shipped files)
+        run: |
+          fail=0
+          if grep -EniH "universal-ai-starter|vantu1998|v[0-9]+\.[0-9]+\.[0-9]+|released" STATE.md ROADMAP.md AGENTS.md; then
+            echo "Shipped template files contain repo-specific dev traces. Log changes in CHANGELOG.md instead."; fail=1
+          fi
+          extra="$(find .ai/knowledge -type f ! -name README.md)"
+          if [ -n "$extra" ]; then echo "Project knowledge must not ship in the template: $extra"; fail=1; fi
+          exit $fail
       - name: Validate frontmatter (skills and commands)
         run: |
           fail=0
@@ -49,6 +59,7 @@ jobs:
 
   test-sync-and-install:
     name: Verify on ${{ matrix.os }}
+    if: github.repository == 'vantu1998/universal-ai-starter'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
