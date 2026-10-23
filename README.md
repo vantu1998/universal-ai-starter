@@ -109,22 +109,39 @@ Prompt your AI:
 
 ---
 
-## 🔄 5-Second AI Handover (Blackboard Pattern)
+## 🔄 Quota-Safe AI Handover (Blackboard Pattern)
 
 Need to switch tools because you hit an API quota or prefer Cursor for editing and Claude for CLI?
 
 ```
-[ Antigravity / Claude ] ──> Updates STATE.md ──> Git Commit
-                                                     │
-[ Cursor / Windsurf ]   <── Reads STATE.md   <───────┘
+[ Antigravity / Claude ] ──> Commits Code + Updates STATE.md ──> Git Commit
+                                                                      │
+[ Cursor / Windsurf ]   <── Reads STATE.md (or git log fallback) <────┘
 ```
 
-1. **Before concluding your session**, tell the current AI:
-   > *"Update `STATE.md` for handover."*
-2. **Open the project in your new tool**, and prompt:
+1. **Continuous State Sync (Never Lose Progress):**  
+   The AI updates `STATE.md` alongside **every Git commit** or completed milestone subtask. You never have to worry about sudden API quota limits cutting you off mid-turn.
+2. **Open in your new tool**, and prompt:  
    > *"Read `STATE.md` and resume work."*
+3. **Fallback Ground Truth:**  
+   If an AI session ever crashes unexpectedly before writing `STATE.md`, the incoming AI uses `git status` and `git log -n 5` to inspect the code reality.
 
-The new AI instantly knows what was finished, what is in-progress, and what to do next—**without reading 50 chat messages or burning unnecessary tokens**.
+---
+
+## ⚡ Native Tool Sync Engine
+
+Why keep commands and skills in `.ai/`?  
+Because `.ai/` is your **Single Source of Truth (SSOT)**.
+
+To enable **native slash command autocomplete** in your IDE's prompt bar (typing `/` in Claude Code or Cursor):
+- Run `./scripts/sync.sh` (or `.\scripts\sync.ps1` on Windows).
+- The sync engine automatically projects thin pointer adapters into:
+  - `.claude/commands/` (for Claude Code CLI autocomplete)
+  - `.cursor/commands/` (for Cursor autocomplete)
+  - `.cursor/rules/` (for Cursor .mdc rules)
+  - `.agents/skills/` (for Antigravity and Agent runners)
+
+*(The one-line installer runs this sync automatically during installation!)*
 
 ---
 

@@ -15,15 +15,24 @@
 ---
 
 ## 2. Core Execution Protocol (Mandatory for all AI)
+
+### A. Context & Verification
 1. **Always Check State First:** Read [`STATE.md`](STATE.md) to discover what was completed last and what the immediate next step is.
-2. **Obey the 4 Golden Rules:** Follow [`.ai/rules/behavior.md`](.ai/rules/behavior.md):
+2. **Fallback Ground Truth:** If `STATE.md` ever appears ambiguous, outdated, or incomplete (e.g. after a sudden quota crash), immediately run `git status` and `git log -n 5` in the terminal to inspect the physical ground truth.
+3. **Obey the 4 Golden Rules:** Follow [`.ai/rules/behavior.md`](.ai/rules/behavior.md):
    - *Think Before Coding:* Surface assumptions and tradeoffs explicitly.
    - *Simplicity First:* Minimum code that solves the problem. Nothing speculative.
    - *Surgical Changes:* Touch only what you must.
    - *Goal-Driven Verification:* Never claim completion without automated tests passing.
-3. **Use Slash Commands:** When working on tasks, trigger the standardized workflows:
-   - `/feature`: For adding new capabilities.
-   - `/refactor`: For safe code improvements without breaking behavior.
-   - `/review`: For code quality, security, and test coverage audit.
-   - `/knowledge-review`: For extracting lessons learned after solving complex bugs.
-4. **Handover Duty:** Always update [`STATE.md`](STATE.md) before concluding your turn or when handing over to another tool.
+
+### B. Standardized Workflows
+Trigger the standardized workflows via slash commands:
+- `/feature`: For adding new capabilities end-to-end.
+- `/refactor`: For safe code improvements without breaking behavior.
+- `/review`: For code quality, security, and test coverage audit.
+- `/knowledge-review`: For extracting lessons learned after solving complex bugs into `.ai/knowledge/`.
+
+### C. Continuous Handover Duty (Quota-Safe Protocol)
+- **Do NOT wait until the end of a session to update `STATE.md`!** Sessions can disconnect abruptly if token limits or API quotas run out.
+- **Rule:** Update [`STATE.md`](STATE.md) alongside **every Git commit** or completed milestone subtask.
+- If you add or modify commands in `.ai/commands/`, run `./scripts/sync.sh` (or `.\scripts\sync.ps1`) to re-project native adapters.

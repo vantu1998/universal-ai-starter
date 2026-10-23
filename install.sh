@@ -32,6 +32,12 @@ mkdir -p .ai
 cp -r "$TMP_DIR/.ai/"* .ai/
 echo "  [✓] Installed .ai/ (commands, skills, rules, knowledge)"
 
+# Copy scripts directory
+mkdir -p scripts
+cp -r "$TMP_DIR/scripts/"* scripts/
+chmod +x scripts/*.sh 2>/dev/null || true
+echo "  [✓] Installed scripts/ (tool sync engine)"
+
 # Copy root template files without overwriting existing files
 for file in "AGENTS.md" "STATE.md" "ROADMAP.md" ".cursorrules"; do
     if [ ! -f "$file" ]; then
@@ -41,6 +47,13 @@ for file in "AGENTS.md" "STATE.md" "ROADMAP.md" ".cursorrules"; do
         echo "  [!] $file already exists (skipped to preserve your work)"
     fi
 done
+
+# Run native tool sync automatically
+if [ -f "./scripts/sync.sh" ]; then
+    echo "  [⚡] Projecting native adapters (.claude, .cursor, .agents)..."
+    bash ./scripts/sync.sh >/dev/null 2>&1 || true
+    echo "  [✓] Native slash commands & skills enabled!"
+fi
 
 echo ""
 echo "🎉 Universal AI-OS installed successfully!"

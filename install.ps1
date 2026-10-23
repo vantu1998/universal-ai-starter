@@ -29,6 +29,12 @@ try {
         Write-Host "  [✓] Installed .ai/ (commands, skills, rules, knowledge)" -ForegroundColor Green
     }
 
+    # Copy scripts folder
+    if (Test-Path (Join-Path $extractedRoot "scripts")) {
+        Copy-Item -Path (Join-Path $extractedRoot "scripts") -Destination "./" -Recurse -Force
+        Write-Host "  [✓] Installed scripts/ (tool sync engine)" -ForegroundColor Green
+    }
+
     # Copy root files without overwriting existing files
     $rootFiles = @("AGENTS.md", "STATE.md", "ROADMAP.md", ".cursorrules")
     foreach ($file in $rootFiles) {
@@ -41,6 +47,13 @@ try {
                 Write-Host "  [!] $file already exists (skipped to preserve your work)" -ForegroundColor Yellow
             }
         }
+    }
+
+    # Run native tool sync automatically
+    if (Test-Path ".\scripts\sync.ps1") {
+        Write-Host "  [⚡] Projecting native adapters (.claude, .cursor, .agents)..." -ForegroundColor Cyan
+        & ".\scripts\sync.ps1" | Out-Null
+        Write-Host "  [✓] Native slash commands & skills enabled!" -ForegroundColor Green
     }
 
     Write-Host ""
