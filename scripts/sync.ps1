@@ -3,7 +3,12 @@
 
 $ErrorActionPreference = "Stop"
 
-$root = Resolve-Path "."
+# Write UTF-8 (no BOM) with LF so output is byte-identical to sync.sh
+function Write-Utf8($path, $content) {
+    [IO.File]::WriteAllText($path, $content, (New-Object Text.UTF8Encoding($false)))
+}
+
+$root = (Resolve-Path ".").Path
 $aiCommandsDir = Join-Path $root ".ai\commands"
 $aiSkillsDir = Join-Path $root ".ai\skills"
 
@@ -25,45 +30,40 @@ New-Item -ItemType Directory -Path $cursorCmdDir -Force | Out-Null
 New-Item -ItemType Directory -Path $cursorRulesDir -Force | Out-Null
 New-Item -ItemType Directory -Path $agentsSkillsDir -Force | Out-Null
 
-# Command metadata table
-$commandMeta = @{
-    "feature.md" = "Drive a feature request through requirements, impact analysis, implementation, testing, and completion"
-    "refactor.md" = "Drive a refactor through analysis, invariants, strategy, risk analysis, incremental refactoring, and testing"
-    "review.md" = "Review a diff/PR/change for correctness, requirements coverage, code quality, security, and performance"
-    "knowledge-review.md" = "Review the current session and classify discoveries into knowledge, rule, skill, or ignore"
-}
-
 # 2. Project commands to .claude/commands and .cursor/commands
 $commands = Get-ChildItem -Path $aiCommandsDir -Filter "*.md" | Where-Object { $_.Name -ne "README.md" }
 foreach ($cmd in $commands) {
-    $desc = if ($commandMeta.ContainsKey($cmd.Name)) { $commandMeta[$cmd.Name] } else { "Execute " + $cmd.BaseName + " workflow" }
+    # Read description from the canonical command frontmatter
+    $desc = "Execute " + $cmd.BaseName + " workflow"
+    $dm = Select-String -Path $cmd.FullName -Pattern "^description:\s*(.+)$" | Select-Object -First 1
+    if ($dm) { $desc = $dm.Matches[0].Groups[1].Value.Trim() }
     
     $stubLines = @(
         "---",
         "description: $desc",
         "---",
         "",
-        ("Follow the canonical instructions in [`.ai/commands/{0}`](../../.ai/commands/{0})." -f $cmd.Name)
+        ("Follow the canonical instructions in [``.ai/commands/{0}``](../../.ai/commands/{0})." -f $cmd.Name)
     )
-    $stubContent = [string]::Join("`r`n", $stubLines)
+    $stubContent = ([string]::Join("`n", $stubLines) + "`n")
 
-    Set-Content -Path (Join-Path $claudeCmdDir $cmd.Name) -Value $stubContent -Encoding UTF8
-    Set-Content -Path (Join-Path $cursorCmdDir $cmd.Name) -Value $stubContent -Encoding UTF8
+    Write-Utf8 (Join-Path $claudeCmdDir $cmd.Name) $stubContent
+    Write-Utf8 (Join-Path $cursorCmdDir $cmd.Name) $stubContent
     Write-Host ("  [OK] Linked command: /{0} -> .claude and .cursor" -f $cmd.BaseName) -ForegroundColor Green
 }
 
 # 3. Setup Cursor rule pointer
 $cursorLines = @(
     "---",
-    "description: Master pointer to Universal AI Operating System (.context and .ai)",
+    "description: Master pointer to Universal AI Operating System (.context & .ai)",
     "alwaysApply: true",
     "---",
     "",
-    "For all project rules, coding standards, and architectural constraints, read AGENTS.md and .ai/README.md.",
-    "Always check and update STATE.md for sprint handover."
+    "For all project rules, coding standards, and architectural constraints, read ``AGENTS.md`` and ``.ai/README.md``.",
+    "Always check and update ``STATE.md`` for sprint handover."
 )
-$cursorRuleStub = [string]::Join("`r`n", $cursorLines)
-Set-Content -Path (Join-Path $cursorRulesDir "ai-source-of-truth.mdc") -Value $cursorRuleStub -Encoding UTF8
+$cursorRuleStub = ([string]::Join("`n", $cursorLines) + "`n")
+Write-Utf8 (Join-Path $cursorRulesDir "ai-source-of-truth.mdc") $cursorRuleStub
 
 # 4. Project skills to .agents/skills/ for Antigravity & Agent tools
 $skillDirs = Get-ChildItem -Path $aiSkillsDir -Directory
@@ -71,16 +71,24 @@ foreach ($sd in $skillDirs) {
     $targetSkillDir = Join-Path $agentsSkillsDir $sd.Name
     New-Item -ItemType Directory -Path $targetSkillDir -Force | Out-Null
     
+    # Reuse the canonical description so agents can trigger the skill correctly
+    $skillDesc = "Skill defined in .ai/skills/$($sd.Name)"
+    $canon = Join-Path $sd.FullName "SKILL.md"
+    if (Test-Path $canon) {
+        $m = Select-String -Path $canon -Pattern "^description:\s*(.+)$" | Select-Object -First 1
+        if ($m) { $skillDesc = $m.Matches[0].Groups[1].Value.Trim() }
+    }
+
     $skillLines = @(
         "---",
         ("name: {0}" -f $sd.Name),
-        ("description: Canonical skill defined in .ai/skills/{0}" -f $sd.Name),
+        ("description: {0}" -f $skillDesc),
         "---",
         "",
-        ("Follow the canonical instructions in [`.ai/skills/{0}/SKILL.md`](../../../.ai/skills/{0}/SKILL.md)." -f $sd.Name)
+        ("Follow the canonical instructions in [``.ai/skills/{0}/SKILL.md``](../../../.ai/skills/{0}/SKILL.md)." -f $sd.Name)
     )
-    $skillStub = [string]::Join("`r`n", $skillLines)
-    Set-Content -Path (Join-Path $targetSkillDir "SKILL.md") -Value $skillStub -Encoding UTF8
+    $skillStub = ([string]::Join("`n", $skillLines) + "`n")
+    Write-Utf8 (Join-Path $targetSkillDir "SKILL.md") $skillStub
     Write-Host ("  [OK] Linked skill: {0} -> .agents/skills" -f $sd.Name) -ForegroundColor Green
 }
 

@@ -29,13 +29,9 @@ for cmd_path in "$AI_CMD_DIR"/*.md; do
     [ "$cmd_file" = "README.md" ] && continue
     cmd_name="${cmd_file%.md}"
 
-    desc="Execute $cmd_name workflow"
-    case "$cmd_name" in
-        "feature") desc="Drive a feature request through requirements, impact analysis, implementation, testing, and completion" ;;
-        "refactor") desc="Drive a refactor through analysis, invariants, strategy, risk analysis, incremental refactoring, and testing" ;;
-        "review") desc="Review a diff/PR/change for correctness, requirements coverage, code quality, security, and performance" ;;
-        "knowledge-review") desc="Review the current session and classify discoveries into knowledge, rule, skill, or ignore" ;;
-    esac
+    # Read description from the canonical command frontmatter
+    desc="$(tr -d '\r' < "$cmd_path" | sed -n '/^---$/,/^---$/{s/^description:[[:space:]]*//p;}' | head -n 1)"
+    [ -n "$desc" ] || desc="Execute $cmd_name workflow"
 
     cat <<EOF > "$CLAUDE_CMD_DIR/$cmd_file"
 ---
@@ -66,10 +62,13 @@ for skill_path in "$AI_SKILLS_DIR"/*; do
     skill_name="$(basename "$skill_path")"
 
     mkdir -p "$AGENTS_SKILLS_DIR/$skill_name"
+    # Reuse the canonical description so agents can trigger the skill correctly
+    skill_desc="$(tr -d '\r' < "$skill_path/SKILL.md" | sed -n '/^---$/,/^---$/{s/^description:[[:space:]]*//p;}' | head -n 1)"
+    [ -n "$skill_desc" ] || skill_desc="Skill defined in .ai/skills/$skill_name"
     cat <<EOF > "$AGENTS_SKILLS_DIR/$skill_name/SKILL.md"
 ---
 name: $skill_name
-description: Canonical skill defined in .ai/skills/$skill_name
+description: $skill_desc
 ---
 
 Follow the canonical instructions in [\`.ai/skills/$skill_name/SKILL.md\`](../../../.ai/skills/$skill_name/SKILL.md).

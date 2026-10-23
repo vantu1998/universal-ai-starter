@@ -1,3 +1,7 @@
+---
+description: Review a diff/PR/change for correctness, requirements coverage, code quality, security, and performance
+---
+
 # /review
 
 Use the `code-review` skill (`.ai/skills/code-review/SKILL.md`).

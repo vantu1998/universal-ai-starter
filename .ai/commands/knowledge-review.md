@@ -1,3 +1,7 @@
+---
+description: Review the current session and classify discoveries into knowledge, rule, skill, or ignore
+---
+
 # Knowledge Review
 
 Review the current development session and identify

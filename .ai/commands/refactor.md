@@ -1,3 +1,7 @@
+---
+description: Drive a refactor through analysis, invariants, strategy, risk analysis, incremental refactoring, and testing
+---
+
 # /refactor
 
 Use the `refactoring` skill (`.ai/skills/refactoring/SKILL.md`).

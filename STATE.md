@@ -23,6 +23,12 @@
 - [x] Configured Core 4 Commands: `/feature`, `/refactor`, `/review`, `/knowledge-review`.
 - [x] Established 4 Golden Behavioral Rules (`.ai/rules/behavior.md`).
 - [x] Created tool-agnostic handover blackboard (`STATE.md`).
+- [x] Review fixes: sync scripts now copy canonical skill descriptions; added `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.ai/rules/security.md`, `.claude/settings.json`.
+- [x] CI: permissions, concurrency, adapter drift check, shellcheck, frontmatter validation, installer tests use local source; Dependabot for actions.
+- [x] Installers: `AI_OS_REF` pinning, `AI_OS_SRC` local source, never overwrite existing `.ai/` files.
+- [x] Sync reads command/skill descriptions from frontmatter; ps1 and sh now produce byte-identical output (`.gitattributes` enforces LF).
+- [x] AGENTS.md: commands, boundaries, parallel-agent sections; SECURITY/CONTRIBUTING/CODEOWNERS/PR template added.
+- [ ] Next: tag a release (`v1.0.0`) so installers can be pinned; replace `@vantu1998` in CODEOWNERS if needed.
 
 ### Currently In-Progress:
 - Ready to be cloned and adapted for any new software project.

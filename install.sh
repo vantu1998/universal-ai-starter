@@ -5,8 +5,9 @@
 set -e
 
 REPO="vantu1998/universal-ai-starter"
-BRANCH="main"
-TAR_URL="https://github.com/${REPO}/archive/refs/heads/${BRANCH}.tar.gz"
+# Pin a release for reproducible installs:  AI_OS_REF=v1.0.0 bash install.sh
+REF="${AI_OS_REF:-main}"
+TAR_URL="https://github.com/${REPO}/archive/${REF}.tar.gz"
 
 echo ""
 echo "🚀 Installing Universal AI-OS into current directory..."
@@ -17,20 +18,25 @@ echo ""
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-# Download and extract tarball
-if command -v curl >/dev/null 2>&1; then
-    curl -sSL "$TAR_URL" | tar -xz -C "$TMP_DIR" --strip-components=1
-elif command -v wget >/dev/null 2>&1; then
-    wget -qO- "$TAR_URL" | tar -xz -C "$TMP_DIR" --strip-components=1
+# Use a local checkout (AI_OS_SRC, used by CI) or download and extract the tarball
+if [ -n "${AI_OS_SRC:-}" ]; then
+    cp -r "$AI_OS_SRC/." "$TMP_DIR/"
 else
-    echo "❌ Error: Neither curl nor wget is available."
-    exit 1
+    if command -v curl >/dev/null 2>&1; then
+        curl -sSL "$TAR_URL" | tar -xz -C "$TMP_DIR" --strip-components=1
+    elif command -v wget >/dev/null 2>&1; then
+        wget -qO- "$TAR_URL" | tar -xz -C "$TMP_DIR" --strip-components=1
+    else
+        echo "❌ Error: Neither curl nor wget is available."
+        exit 1
+    fi
 fi
 
 # Copy .ai directory
 mkdir -p .ai
-cp -r "$TMP_DIR/.ai/"* .ai/
-echo "  [✓] Installed .ai/ (commands, skills, rules, knowledge)"
+# -n: never overwrite existing files (preserves your knowledge/ and customised rules)
+cp -rn "$TMP_DIR/.ai/"* .ai/ 2>/dev/null || true
+echo "  [✓] Installed .ai/ (existing files preserved)"
 
 # Copy scripts directory
 mkdir -p scripts
@@ -39,8 +45,10 @@ chmod +x scripts/*.sh 2>/dev/null || true
 echo "  [✓] Installed scripts/ (tool sync engine)"
 
 # Copy root template files without overwriting existing files
-for file in "AGENTS.md" "STATE.md" "ROADMAP.md" ".cursorrules"; do
+for file in "AGENTS.md" "CLAUDE.md" "GEMINI.md" "STATE.md" "ROADMAP.md" ".cursorrules" ".github/copilot-instructions.md" ".claude/settings.json"; do
+    [ -f "$TMP_DIR/$file" ] || continue
     if [ ! -f "$file" ]; then
+        mkdir -p "$(dirname "$file")"
         cp "$TMP_DIR/$file" "./$file"
         echo "  [✓] Created $file"
     else

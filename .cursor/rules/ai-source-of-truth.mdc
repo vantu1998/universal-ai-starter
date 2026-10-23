@@ -1,7 +1,7 @@
-﻿---
-description: Master pointer to Universal AI Operating System (.context and .ai)
+---
+description: Master pointer to Universal AI Operating System (.context & .ai)
 alwaysApply: true
 ---
 
-For all project rules, coding standards, and architectural constraints, read AGENTS.md and .ai/README.md.
-Always check and update STATE.md for sprint handover.
+For all project rules, coding standards, and architectural constraints, read `AGENTS.md` and `.ai/README.md`.
+Always check and update `STATE.md` for sprint handover.

@@ -7,7 +7,38 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  lint:
+    name: Lint scripts and AI config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ShellCheck
+        run: shellcheck -S warning scripts/sync.sh install.sh
+
+      - name: Validate frontmatter (skills and commands)
+        run: |
+          fail=0
+          for f in .ai/skills/*/SKILL.md; do
+            tr -d '\r' < "$f" | head -n 1 | grep -q "^---$" || { echo "$f: missing frontmatter"; fail=1; }
+            tr -d '\r' < "$f" | grep -q "^name: " || { echo "$f: missing name"; fail=1; }
+            tr -d '\r' < "$f" | grep -q "^description: " || { echo "$f: missing description"; fail=1; }
+          done
+          for f in .ai/commands/*.md; do
+            [ "$(basename "$f")" = "README.md" ] && continue
+            tr -d '\r' < "$f" | grep -q "^description: " || { echo "$f: missing description"; fail=1; }
+          done
+          exit $fail
+
   test-sync-and-install:
     name: Verify on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -26,6 +57,8 @@ jobs:
         run: |
           chmod +x scripts/sync.sh install.sh
           ./scripts/sync.sh
+          # Drift check: committed adapters must match what sync generates from .ai/
+          git diff --exit-code -- .claude .cursor .agents || { echo "Adapters are out of date. Run scripts/sync.sh and commit."; exit 1; }
           # Verify expected native adapters
           test -f .claude/commands/feature.md
           test -f .cursor/commands/feature.md
@@ -39,7 +72,10 @@ jobs:
           TEST_DIR="/tmp/test-ai-os"
           mkdir -p "$TEST_DIR"
           cd "$TEST_DIR"
-          bash "$GITHUB_WORKSPACE/install.sh"
+          # Test the checked-out code, not the remote main branch
+          AI_OS_SRC="$GITHUB_WORKSPACE" bash "$GITHUB_WORKSPACE/install.sh"
+          test -f CLAUDE.md
+          test -f .github/copilot-instructions.md
           # Verify installation in target folder
           test -d .ai/commands
           test -f AGENTS.md
@@ -70,6 +106,7 @@ jobs:
           Set-Location $testDir
           
           # Run install.ps1 directly
+          $env:AI_OS_SRC = $env:GITHUB_WORKSPACE
           & "$env:GITHUB_WORKSPACE\install.ps1"
           
           # Verify installation in target folder

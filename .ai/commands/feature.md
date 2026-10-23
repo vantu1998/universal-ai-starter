@@ -1,3 +1,7 @@
+---
+description: Drive a feature request through requirements, impact analysis, implementation, testing, and completion
+---
+
 # /feature
 
 Use the `feature-development` skill (`.ai/skills/feature-development/SKILL.md`).

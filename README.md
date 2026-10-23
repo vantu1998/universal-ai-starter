@@ -57,7 +57,7 @@ universal-ai-starter/
 ├── AGENTS.md               # 🌟 Master Entry Point: Project stack & invariant contract
 ├── STATE.md                # 📋 The Living Blackboard: Real-time sprint state & handover
 ├── ROADMAP.md              # 🗺️ Task Decomposition: Micro-task backlog ([ ] and [x])
-├── .cursorrules            # 🔌 Zero-config pointer for Cursor compatibility
+├── .cursorrules            # 🔌 Legacy pointer for older Cursor versions (modern Cursor reads AGENTS.md + .cursor/rules)
 │
 └── .ai/                    # 🧠 The In-Repo AI Operating System
     ├── commands/           # Human-invoked entry points (/feature, /refactor, /review...)
@@ -176,7 +176,7 @@ Universal AI-OS is 100% vendor-agnostic and tested with:
 
 | Tool / Agent | Support Level | Integration Mechanism |
 | :--- | :---: | :--- |
-| **Cursor** | Native | Reads `.cursorrules` pointer → anchors to `AGENTS.md` & `STATE.md` |
+| **Cursor** | Native | Reads `AGENTS.md` + `.cursor/rules` (legacy `.cursorrules` kept) → anchors to `STATE.md` |
 | **Claude Code (CLI)** | Native | Reads `AGENTS.md` & `CLAUDE.md` entry point |
 | **Antigravity (AGY)** | Native | Reads root `AGENTS.md` and `.ai/` context maps |
 | **Codeium Windsurf** | Native | Reads `AGENTS.md` / `.windsurfrules` |

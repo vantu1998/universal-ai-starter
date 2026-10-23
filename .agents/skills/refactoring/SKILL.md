@@ -1,6 +1,6 @@
-﻿---
+---
 name: refactoring
-description: Canonical skill defined in .ai/skills/refactoring
+description: Change code structure without changing observable behavior — analysis, invariants, strategy, incremental refactoring, testing, completion.
 ---
 
-Follow the canonical instructions in [.ai/skills/refactoring/SKILL.md](../../../.ai/skills/refactoring/SKILL.md).
+Follow the canonical instructions in [`.ai/skills/refactoring/SKILL.md`](../../../.ai/skills/refactoring/SKILL.md).

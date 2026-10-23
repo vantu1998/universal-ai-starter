@@ -9,3 +9,4 @@ Constraints and invariants that must be respected during all operations.
 | [refactor/](refactor/) | Refactoring | Invariant preservation, scope boundaries, and safety checks for refactoring. |
 | [review/](review/) | Code review | Evidence-based findings, severity rankings, and review rubric. |
 | [knowledge/](knowledge/) | Knowledge curation | Quality, lifecycle, and safety rules for persisting facts in `.ai/knowledge/`. |
+| [security.md](security.md) | All AI operations | Prompt-injection, secrets, destructive actions, least privilege. |
