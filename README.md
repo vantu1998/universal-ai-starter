@@ -6,8 +6,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Supported Tools](https://img.shields.io/badge/Supported_Tools-Cursor%20%7C%20Claude%20Code%20%7C%20Windsurf%20%7C%20Antigravity-orange.svg?style=for-the-badge)](#-universal-compatibility)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/)
-[![Stars](https://img.shields.io/github/stars/your-username/universal-ai-starter?style=for-the-badge&color=yellow)](https://github.com/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/vantu1998/universal-ai-starter/pulls)
+[![Stars](https://img.shields.io/github/stars/vantu1998/universal-ai-starter?style=for-the-badge&color=yellow)](https://github.com/vantu1998/universal-ai-starter/stargazers)
 
 <p align="center">
   <b>Tired of AI amnesia, context drift, hallucinated architecture, and vendor lock-in?</b><br>
@@ -66,18 +66,34 @@ universal-ai-starter/
 
 ---
 
-## ⚡ Quickstart in 60 Seconds
+## ⚡ Quickstart
 
-### 1. Clone into your new or existing project
+### Option A: Install into ANY Existing Project (Recommended)
+
+Run this one-liner inside your existing repository to immediately inject Universal AI-OS:
+
+**macOS / Linux / WSL / Git Bash:**
 ```bash
-# Clone the template
-git clone https://github.com/your-username/universal-ai-starter.git my-awesome-project
-cd my-awesome-project
-
-# Or copy .ai/, AGENTS.md, and STATE.md into your existing project!
+curl -sSL https://raw.githubusercontent.com/vantu1998/universal-ai-starter/main/install.sh | bash
 ```
 
-### 2. Configure `AGENTS.md` (Takes 30 seconds)
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/vantu1998/universal-ai-starter/main/install.ps1 | iex
+```
+
+---
+
+### Option B: Clone as a Fresh Project
+
+```bash
+git clone https://github.com/vantu1998/universal-ai-starter.git my-awesome-project
+cd my-awesome-project
+```
+
+---
+
+### Next: Configure `AGENTS.md` (Takes 30 seconds)
 Open `AGENTS.md` and customize Section 1 for your tech stack:
 ```markdown
 - **Project Name:** My Next-Gen API
@@ -86,7 +102,7 @@ Open `AGENTS.md` and customize Section 1 for your tech stack:
 - **Primary Architecture:** Clean / Hexagonal Architecture
 ```
 
-### 3. Start Pairing!
+### Start Pairing!
 Open the project in **Cursor**, **Claude Code**, **Antigravity**, or **Windsurf**. 
 Prompt your AI:
 > *"Read `AGENTS.md` and `STATE.md`, then execute Task 1.1 in `ROADMAP.md`."*

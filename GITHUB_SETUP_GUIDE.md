@@ -39,7 +39,7 @@ Mở Terminal tại thư mục `E:\PR\universal-ai-starter`:
 git branch -M main
 
 # 2. Thêm link repo GitHub của bạn (thay <your-username> bằng username thật)
-git remote add origin https://github.com/<your-username>/universal-ai-starter.git
+git remote add origin https://github.com/vantu1998/universal-ai-starter.git
 
 # 3. Đẩy toàn bộ code lên
 git push -u origin main
