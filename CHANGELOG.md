@@ -4,6 +4,11 @@ Development history of **universal-ai-starter** itself. This file is NOT shipped
 `STATE.md` is a clean template and must never contain this repo's own dev log.
 
 ## [Unreleased]
+- Automatic GitHub Template Cleanup Action (`.github/workflows/template-cleanup.yml`):
+  When users click "Use this template", the action automatically removes upstream maintainer
+  files (`CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CODEOWNERS`, `install.sh`, `install.ps1`),
+  personalizes `AGENTS.md` and `STATE.md` with the new repository name, generates a clean project
+  `README.md`, and self-destructs after committing.
 - Separate template content from maintainer content: clean `STATE.md`, CI guard against dev traces,
   `ci.yml` gated to the upstream repo.
 

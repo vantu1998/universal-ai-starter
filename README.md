@@ -222,14 +222,18 @@ Universal AI-OS is 100% vendor-agnostic and verified with:
 
 ---
 
-## 🧹 Using "Use this template" on GitHub
+## 🧹 Automated Template Cleanup (Zero Manual Setup)
 
-When you use the one-line installer (`install.sh` / `install.ps1`), it only injects clean template files.
+Whether you use the one-line installer or GitHub's **Use this template** button, your project stays pristine:
 
-If you generate a new repository via GitHub's **Use this template** button, you also inherit upstream maintainer files. Simply customize or delete them:
-- `.github/CODEOWNERS`: Change or remove `@vantu1998` to reflect your team.
-- `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md`: Replace with your own project policies.
-- `.github/workflows/ci.yml`: This workflow is gated to the upstream repo (`if: github.repository == 'vantu1998/universal-ai-starter'`), so it won't break your fork. Replace it with your project's test suite.
+- **Via One-Line Installer (`install.sh` / `install.ps1`):**  
+  Only installs the core `.ai/` operating system, scripts, and clean handover files. Upstream maintainer files are never downloaded.
+- **Via GitHub "Use this template" Button:**  
+  When your new repository is created, an automated GitHub Action (`template-cleanup.yml`) immediately fires to:
+  1. Automatically remove upstream maintainer files (`.github/CODEOWNERS`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, install scripts).
+  2. Personalize `AGENTS.md` and `STATE.md` with your new repository name.
+  3. Replace the starter README with a clean, ready-to-use project README.
+  4. **Self-destruct:** It deletes its own workflow file after committing, leaving your repo 100% clean with zero manual effort!
 
 ---
 
