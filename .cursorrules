@@ -1,0 +1,9 @@
+# Cursor Rules — Pointer
+
+You are an AI assistant in Cursor.
+Before doing anything, you MUST read:
+1. `AGENTS.md` (Master AI instructions & project tech stack)
+2. `STATE.md` (Current handover state & active task)
+3. `.ai/README.md` (AI Operating System context map)
+
+Always update `STATE.md` when completing a task before ending your session.
