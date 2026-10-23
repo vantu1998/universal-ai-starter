@@ -1,0 +1,9 @@
+---
+description: Constraints for review work. Apply when running the /review workflow.
+alwaysApply: false
+---
+
+Follow these rules before doing review work:
+- `.ai/rules/review/quality.md`
+- `.ai/rules/review/safety.md`
+- `.ai/rules/review/scope.md`

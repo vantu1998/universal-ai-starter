@@ -65,6 +65,17 @@ $cursorLines = @(
 $cursorRuleStub = ([string]::Join("`n", $cursorLines) + "`n")
 Write-Utf8 (Join-Path $cursorRulesDir "ai-source-of-truth.mdc") $cursorRuleStub
 
+# 3b. Scoped Cursor rules: security always on, per-workflow rules loaded on demand
+Write-Utf8 (Join-Path $cursorRulesDir "ai-security.mdc") ("---`ndescription: Security rules for AI agents (untrusted input, secrets, destructive actions)`nalwaysApply: true`n---`n`nFollow ``.ai/rules/security.md`` for every task.`n")
+
+foreach ($rd in (Get-ChildItem -Path (Join-Path $root ".ai\rules") -Directory)) {
+    $group = $rd.Name
+    $body = "---`ndescription: Constraints for $group work. Apply when running the /$group workflow.`nalwaysApply: false`n---`n`nFollow these rules before doing $group work:`n"
+    foreach ($rf in (Get-ChildItem -Path $rd.FullName -Filter "*.md" | Sort-Object Name)) {
+        $body += ("- ``.ai/rules/{0}/{1}```n" -f $group, $rf.Name)
+    }
+    Write-Utf8 (Join-Path $cursorRulesDir ("ai-$group.mdc")) $body
+}
 # 4. Project skills to .agents/skills/ for Antigravity & Agent tools
 $skillDirs = Get-ChildItem -Path $aiSkillsDir -Directory
 foreach ($sd in $skillDirs) {

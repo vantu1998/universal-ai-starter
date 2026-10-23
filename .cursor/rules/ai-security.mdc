@@ -1,0 +1,6 @@
+---
+description: Security rules for AI agents (untrusted input, secrets, destructive actions)
+alwaysApply: true
+---
+
+Follow `.ai/rules/security.md` for every task.

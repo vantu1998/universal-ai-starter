@@ -1,0 +1,9 @@
+---
+description: Constraints for feature work. Apply when running the /feature workflow.
+alwaysApply: false
+---
+
+Follow these rules before doing feature work:
+- `.ai/rules/feature/quality.md`
+- `.ai/rules/feature/safety.md`
+- `.ai/rules/feature/scope.md`

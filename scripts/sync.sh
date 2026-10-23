@@ -56,6 +56,27 @@ For all project rules, coding standards, and architectural constraints, read \`A
 Always check and update \`STATE.md\` for sprint handover.
 EOF
 
+# 3b. Scoped Cursor rules: security always on, per-workflow rules loaded on demand
+cat <<EOF > "$CURSOR_RULES_DIR/ai-security.mdc"
+---
+description: Security rules for AI agents (untrusted input, secrets, destructive actions)
+alwaysApply: true
+---
+
+Follow \`.ai/rules/security.md\` for every task.
+EOF
+
+for rule_dir in "$ROOT/.ai/rules"/*/; do
+    [ -d "$rule_dir" ] || continue
+    group="$(basename "$rule_dir")"
+    {
+        printf -- '---\ndescription: Constraints for %s work. Apply when running the /%s workflow.\nalwaysApply: false\n---\n\n' "$group" "$group"
+        printf 'Follow these rules before doing %s work:\n' "$group"
+        for rule_file in "$rule_dir"*.md; do
+            printf -- '- `.ai/rules/%s/%s`\n' "$group" "$(basename "$rule_file")"
+        done
+    } > "$CURSOR_RULES_DIR/ai-$group.mdc"
+done
 # 4. Project skills to .agents/skills/ for Antigravity & Agent tools
 for skill_path in "$AI_SKILLS_DIR"/*; do
     [ -d "$skill_path" ] || continue

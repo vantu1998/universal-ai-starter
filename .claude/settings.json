@@ -1,4 +1,4 @@
-﻿{
+{
   "permissions": {
     "deny": [
       "Read(./.env)",
@@ -9,6 +9,19 @@
       "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
       "Bash(curl:*|*sh)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/hooks/guard-bash.sh\""
+          }
+        ]
+      }
     ]
   }
 }

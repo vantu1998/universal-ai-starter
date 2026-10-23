@@ -1,0 +1,9 @@
+---
+description: Constraints for refactor work. Apply when running the /refactor workflow.
+alwaysApply: false
+---
+
+Follow these rules before doing refactor work:
+- `.ai/rules/refactor/quality.md`
+- `.ai/rules/refactor/safety.md`
+- `.ai/rules/refactor/scope.md`

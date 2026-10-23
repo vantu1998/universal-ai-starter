@@ -1,0 +1,9 @@
+---
+description: Constraints for knowledge work. Apply when running the /knowledge workflow.
+alwaysApply: false
+---
+
+Follow these rules before doing knowledge work:
+- `.ai/rules/knowledge/lifecycle.md`
+- `.ai/rules/knowledge/quality.md`
+- `.ai/rules/knowledge/safety.md`
