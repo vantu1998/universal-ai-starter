@@ -1,0 +1,82 @@
+name: CI Test Suite
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-sync-and-install:
+    name: Verify on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # --- LINUX / BASH TESTS ---
+      - name: Test Native Tool Sync (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          chmod +x scripts/sync.sh install.sh
+          ./scripts/sync.sh
+          # Verify expected native adapters
+          test -f .claude/commands/feature.md
+          test -f .cursor/commands/feature.md
+          test -f .cursor/rules/ai-source-of-truth.mdc
+          test -f .agents/skills/feature-development/SKILL.md
+          echo "Sync engine passed on Linux!"
+
+      - name: Test Installer (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          TEST_DIR="/tmp/test-ai-os"
+          mkdir -p "$TEST_DIR"
+          cd "$TEST_DIR"
+          bash "$GITHUB_WORKSPACE/install.sh"
+          # Verify installation in target folder
+          test -d .ai/commands
+          test -f AGENTS.md
+          test -f STATE.md
+          test -f ROADMAP.md
+          test -f .claude/commands/feature.md
+          echo "Installer passed on Linux!"
+
+      # --- WINDOWS / POWERSHELL TESTS ---
+      - name: Test Native Tool Sync (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .\scripts\sync.ps1
+          # Verify expected native adapters
+          if (-not (Test-Path ".claude\commands\feature.md")) { throw ".claude command missing" }
+          if (-not (Test-Path ".cursor\commands\feature.md")) { throw ".cursor command missing" }
+          if (-not (Test-Path ".cursor\rules\ai-source-of-truth.mdc")) { throw ".cursor rule missing" }
+          if (-not (Test-Path ".agents\skills\feature-development\SKILL.md")) { throw ".agents skill missing" }
+          Write-Host "Sync engine passed on Windows!"
+
+      - name: Test Installer (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $testDir = Join-Path $env:TEMP ("ai-os-ci-" + [System.Guid]::NewGuid().ToString("N"))
+          New-Item -ItemType Directory -Path $testDir -Force | Out-Null
+          Set-Location $testDir
+          
+          # Run install.ps1 directly
+          & "$env:GITHUB_WORKSPACE\install.ps1"
+          
+          # Verify installation in target folder
+          if (-not (Test-Path ".ai\commands\feature.md")) { throw "Installed .ai missing" }
+          if (-not (Test-Path "AGENTS.md")) { throw "Installed AGENTS.md missing" }
+          if (-not (Test-Path "STATE.md")) { throw "Installed STATE.md missing" }
+          if (-not (Test-Path ".claude\commands\feature.md")) { throw "Installed native adapter missing" }
+          
+          Remove-Item -Path $testDir -Recurse -Force
+          Write-Host "Installer passed on Windows!"

@@ -4,6 +4,8 @@
 
 ### The Production-Ready, Vendor-Agnostic AI Development Framework for Modern Software Engineering.
 
+[![Release](https://img.shields.io/github/v/release/vantu1998/universal-ai-starter?style=for-the-badge&color=green)](https://github.com/vantu1998/universal-ai-starter/releases)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/vantu1998/universal-ai-starter/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/vantu1998/universal-ai-starter/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Supported Tools](https://img.shields.io/badge/Supported_Tools-Cursor%20%7C%20Claude%20Code%20%7C%20Windsurf%20%7C%20Antigravity-orange.svg?style=for-the-badge)](#-universal-compatibility)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/vantu1998/universal-ai-starter/pulls)
