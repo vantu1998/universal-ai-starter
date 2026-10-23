@@ -78,5 +78,6 @@ jobs:
           if (-not (Test-Path "STATE.md")) { throw "Installed STATE.md missing" }
           if (-not (Test-Path ".claude\commands\feature.md")) { throw "Installed native adapter missing" }
           
+          Set-Location "$env:GITHUB_WORKSPACE"
           Remove-Item -Path $testDir -Recurse -Force
           Write-Host "Installer passed on Windows!"
